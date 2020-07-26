@@ -1,0 +1,31 @@
+version: '2'
+services:
+  fakturobot2-app:
+    image: fakturobot2
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka
+      - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
+      - SPRING_DATASOURCE_URL=jdbc:mysql://fakturobot2-mysql:3306/fakturobot2?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+      - SPRING_DATA_JEST_URI=http://fakturobot2-elasticsearch:9200
+      - SPRING_ELASTICSEARCH_REST_URIS=http://fakturobot2-elasticsearch:9200
+    ports:
+      - 8080:8080
+  fakturobot2-mysql:
+    extends:
+      file: mysql.yml
+      service: fakturobot2-mysql
+  fakturobot2-elasticsearch:
+    extends:
+      file: elasticsearch.yml
+      service: fakturobot2-elasticsearch
+  jhipster-registry:
+    extends:
+      file: jhipster-registry.yml
+      service: jhipster-registry
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=native
+      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_LOCATIONS=file:./central-config/docker-config/
