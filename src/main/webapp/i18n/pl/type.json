@@ -1,0 +1,9 @@
+{
+  "fakturobot2App": {
+    "Type": {
+      "null": "",
+      "Kosztowa": "Kosztowa",
+      "Przychodowa": "Przychodowa"
+    }
+  }
+}
